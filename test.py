@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 reload(sys)  #重新加载sys
-sys.setdefaultencoding("utf8")  ##调用setdefaultencoding函数
+sys.setdefaultencoding("utf8")  # 调用setdefaultencoding函数
 
 def get_record_from_account(file_name, sheet_name):
     accountant_sheet_to_df =  pd.read_excel(file_name,
