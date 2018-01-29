@@ -1,0 +1,41 @@
+{
+    "H_config": {
+        "field_map": {
+            "sec_name": "股票简称",
+            "close": "收盘价",
+            "industry_hs": "恒生行业代码（三级行业）",
+            "history_high": "近期创历史新高",
+            "pe_ttm": "市盈率PE（TTM）",
+            "pb": "市净率PB",
+            "pe_est": "预测PE",
+            "roe": "净资产收益率",
+            "roa": "总资产净利率",
+            "debttoassets": "资产负债率",
+            "current": "流动比率",
+            "yoy_or": "营业收入同比增长率",
+            "yoyprofit": "净利润（同比增长率）",
+            "qfa_cgrsales":"单季度营业收入环比增长率",
+            "qfa_cgrprofit":"单季度净利润环比增长率",
+            "profitnotice_date": "业绩预告日期",
+            "profitnotice_style": "业绩预告类型",
+            "profitnotice_abstract": "业绩预告摘要",
+            "ipo_date": "上市日期"
+        },
+        "stocks_file": "stocks_hk.json",
+        "param_n": "7",
+        "delta_days": 365
+    },
+    "email_config": {
+        "smtp": "smtp.jmcapital.cc",
+        "account": "sunb@jmcapital.cc",
+        "password": "Sm1KbWxsOyc=\n",
+        "from_email": "sunb@jmcapital.cc",
+        "to_emails": [
+            "sunb@jmcapital.cc"
+
+        ],
+        "subject": "创新高选股推荐",
+        "image_name": "JmCaptical.jpg",
+        "body_name": "email_body.html"
+    }
+}
