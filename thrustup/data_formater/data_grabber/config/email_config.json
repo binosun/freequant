@@ -1,0 +1,13 @@
+{
+    "smtp": "smtp.jmcapital.cc",
+    "account": "sunb@jmcapital.cc",
+    "password": "Sm1KbWxsOyc=\n",
+    "from_email": "sunb@jmcapital.cc",
+    "to_emails": [
+        "sunb@jmcapital.cc"
+    ],
+    "history_high_email": {
+        "subject": "创新高选股推荐",
+        "image_name": "JmCaptical.jpg",
+        "body_name": "email_body.html"}
+    }
