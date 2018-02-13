@@ -1088,7 +1088,7 @@ class DataFormatter(object):
         name = result["INDUSTRY_CITIC"]
 
         final_df = pd.DataFrame({u"行业":name, u"比例":rate})
-        final_df.sort_values(by=u"比例", ascending=True, inplace=True)
+        # final_df.sort_values(by=u"行业", ascending=True, inplace=True)
         final_df.to_csv("MA60.csv", index=False, encoding="gb2312")
 
         self.save_df_to_excel(final_df)
