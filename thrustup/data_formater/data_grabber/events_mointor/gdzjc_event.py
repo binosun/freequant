@@ -29,10 +29,10 @@ def init_url():
 
     urls = {
                 "jzc" : "http://datainterface3.eastmoney.com/EM_DataCenter_V3/api/GDZC/GetGDZC?" \
-                           "tkn=eastmoney&cfg=gdzc&secucode=&sharehdname=&pageSize=50&pageNum=1&sortFields=NOTICEDATE&sortDirec=1" \
+                           "tkn=eastmoney&cfg=gdzc&secucode=&sharehdname=&pageSize=250&pageNum=1&sortFields=NOTICEDATE&sortDirec=1" \
                            "&fx=1&startDate=" + start_date + "&endDate=" + end_date,
                 "jjc" : "http://datainterface3.eastmoney.com/EM_DataCenter_V3/api/GDZC/GetGDZC?" \
-                           "tkn=eastmoney&cfg=gdzc&secucode=&sharehdname=&pageSize=50&pageNum=1&sortFields=NOTICEDATE&sortDirec=1" \
+                           "tkn=eastmoney&cfg=gdzc&secucode=&sharehdname=&pageSize=250&pageNum=1&sortFields=NOTICEDATE&sortDirec=1" \
                            "&fx=2&startDate=" + start_date + "&endDate=" + end_date
                 }
     return headers, urls
