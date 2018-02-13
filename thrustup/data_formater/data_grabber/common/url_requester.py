@@ -14,12 +14,13 @@ def urllib_requester(url,header):
     response = urllib2.urlopen(request)
     html = response.read()
     print "html", type(html), html
-    # if isinstance(html, str):
-    #     url_response = unicode(html)
-    #     return url_response
-    # else:
-    url_response = html.decode('UTF-8')
-    return url_response
+    if isinstance(html, str):
+        try:
+            url_response = html.decode('UTF-8')
+            return url_response
+        except:
+            url_response = unicode(html)
+            return url_response
 
 if __name__ == "__main__":
     print "hello"
