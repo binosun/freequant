@@ -15,7 +15,7 @@ from email_sender.email_sender import EmailEngine
 
 def event_engine_main():
 
-    announcement_main()
+    # announcement_main()
 
     w.start()
     gdzjc_event_main()

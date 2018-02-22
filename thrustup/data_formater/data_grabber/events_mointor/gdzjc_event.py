@@ -61,15 +61,7 @@ def get_zjc_df(raw_dict):
     stocks = [stock + ".SH" if stock[0] == "6" else stock + ".SZ" for stock in data_df["SCode"]]
     data_df["SCode"] = pd.Series(stocks, index=data_df.index)
 
-    # BDHCGBL_list = []
-    # for cell in data_df["BDHCGBL"]:
-    #     if cell:
-    #         BDHCGBL_list.append(float(cell.encode("utf-8")))
-    #     else:
-    #         BDHCGBL_list.append(0.0)
-
     data_df["ChangeNum"] = pd.Series([float(cell.encode("utf-8")) for cell in data_df["ChangeNum"]], index=data_df.index)
-    # print "data_df[BDSLZLTB]",data_df["BDSLZLTB"]
     list_BDSLZLTB = []
     for item in data_df["BDSLZLTB"]:
         cell = item.encode("utf-8")
