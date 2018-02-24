@@ -127,8 +127,6 @@ class DataFormatter(object):
             # stock_names = stocks.Data[2]
             stocks_json = OrderedDict()
             stocks_json["codes"] = stock_codes
-            # for index ,code in enumerate(stock_codes):
-            #     stocks_json[code] = stock_names[index]
             fh = open(stock_file_name, 'w')
             fh.write(json.dumps(stocks_json))
             fh.close()
@@ -924,13 +922,9 @@ class DataFormatter(object):
                                       "eps_ttm,pb,yoy_or,yoyop",
                                       "rptDate=" + self.date["rpt_date_str"] + ";rptType=1;tradeDate=" +
                                       text_trade_date + ";ruleType=9")
-            # print "gross_pick_result", gross_pick_result
             gross_pick_df = DataFrame(gross_pick_result.Data, columns=gross_pick_result.Codes,
                                       index=gross_pick_result.Fields).T
-            # print "gross_pick_df", gross_pick_df
-            # gross_pick_df = gross_pick_df.dropna(axis=0, how='any')
-            # gross_pick_df["peg"] = 0
-            # gross_pick_df["peg"] = gross_pick_df["PE_EST_LAST"]/(((gross_pick_df["EST_EPS"]/gross_pick_df["EPS_TTM"])**(0.5)-1)*100)
+
             gross_pick_df = gross_pick_df[
                 (gross_pick_df["PB"] > 0) & (gross_pick_df["PB"] < 12)]
             gross_pick_df = gross_pick_df[(gross_pick_df["YOY_OR"] > 0)]
