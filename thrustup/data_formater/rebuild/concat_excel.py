@@ -137,7 +137,6 @@ class Concater(object):
             self.group_in_chinese = "低估小市值"
         self.sheet1 = self.book.add_sheet(self.group_in_chinese + "-" +self.flag + "股")
 
-
     def concat_history_high_df(self):
         # 合并创新高股票数据
         if self.assist_df.empty or self.main_df.empty:
@@ -170,7 +169,6 @@ class Concater(object):
         # xlsx_output.save()
         # self.main_df = self.main_df.replace(np.nan, "")
         return self.main_df
-
 
     def concat_ih_df(self):
         # 合并股东增持股票数据
@@ -257,8 +255,6 @@ class Concater(object):
 
         print "self.assist_df",self.assist_df.head(5)
         return self.assist_df
-
-
 
     def write_ih_book(self, data):
         if data.empty:
@@ -387,7 +383,7 @@ class Concater(object):
             self.sheet1.col(25).width = 700 * 25
 
         print self.remarks
-        self.sheet1.write(rows_count + 1,0, self.remarks)
+        self.sheet1.write(rows_count + 1, 0, self.remarks)
         tall_style = xlwt.easyxf('font:height 360;')
         first_row = self.sheet1.row(0)
         first_row.set_style(tall_style)
@@ -466,7 +462,6 @@ class Concater(object):
             for i in range(0, columns_count):
                 for j in range(1, rows_count + 1):
                     cell_data = data[row0[i]][j - 1]
-                    print i,j,data[row0[i]][j - 1]
                     if i == 2:  # 连续新高周数
                         self.sheet1.write(j, i + 1, int(cell_data), content_style)
                         continue
