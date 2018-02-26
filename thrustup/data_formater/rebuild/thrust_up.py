@@ -17,10 +17,7 @@ if sys.getdefaultencoding() != defaultencoding:
     reload(sys)
     sys.setdefaultencoding(defaultencoding)
 
-
-
 from WindPy import *
-
 
 class DataFormatter(object):
 
@@ -51,13 +48,8 @@ class DataFormatter(object):
     def get_config(self):
         with open("config.json", "r") as f:
             configuration = json.load(f, object_pairs_hook=OrderedDict)
-        if self.flag == "H":
-            self.config = configuration["H_config"]
-        else:
-            self.config = configuration["A_config"]
-
+        self.config = configuration["H_config"] if self.flag == "H" else configuration["A_config"]
         self.email_config = configuration["email_config"]
-        print "get config finished"
 
     def set_style(self, name, height, bold=False, pattern_switch=False, alignment_switch=True):
         style = xlwt.XFStyle()  # 初始化样式
@@ -119,7 +111,6 @@ class DataFormatter(object):
             today_str = dt.datetime.today().strftime("%Y-%m-%d")
             if self.flag == "H":
                 query_key = "date=" + today_str + ";sectorid=a002010100000000"  # 港股
-                # query_key = "date=" + today_str + ";sectorid=a002010500000000"  # H股
             else:
                 query_key = "date=" + today_str + ";sectorid=a001010100000000"
             stocks = w.wset("sectorconstituent", query_key)
@@ -196,7 +187,6 @@ class DataFormatter(object):
         self.date["year_str"] = year_str
         self.date["today_str"] = today_str
         self.date["last_rpt_date_str"] = last_rpt_date_str
-        # print self.date
         return self.date
 
     def get_query_stocks(self, stocks, main_config):
@@ -210,7 +200,6 @@ class DataFormatter(object):
             return self.get_history_high_stocks(stocks, main_config)
 
         elif self.group == "stage_high":
-
             self.remarks = u"备注：" \
                            u"1.该表列出上市满1年并且最高价最近" + self.config["param_n"] + u"天创"+self.config["param_m"]+u"天新高的股票及相关数据；" \
                            u"2.表中财务数据均为当前报告期数据，部分公司因尚未公布当前报告期数据，因此为空值；" \
@@ -218,7 +207,6 @@ class DataFormatter(object):
             self.group_in_chinese = "阶段新高"
             return self.get_stage_high_stocks(stocks, main_config)
         elif self.group == "stage_low":
-
             self.remarks = u"备注：" \
                            u"1.该表列出上市满1年并且最高价最近" + self.config["param_n"] + u"天创"+self.config["param_m_low"]+u"天新低的股票及相关数据；" \
                            u"2.表中财务数据均为当前报告期数据，部分公司因尚未公布当前报告期数据，因此为空值；" \
@@ -226,7 +214,6 @@ class DataFormatter(object):
             self.group_in_chinese = "阶段新低"
             return self.get_stage_low_stocks(stocks, main_config)
         elif self.group == "quarter_increase":
-
             self.remarks = u"备注：" \
                            u"1.该表列出上市满1年并且营收、利润、毛利率环比加速的股票及相关数据；" \
                            u"2.表中财务数据均为当前报告期数据，部分公司因尚未公布当前报告期数据，因此为空值；" \
@@ -266,14 +253,11 @@ class DataFormatter(object):
                            u"2.表中财务数据均为当前报告期数据(预测数据除外)，部分公司因尚未公布当前报告期数据，因此为空值；" \
                            u"3.净资产收益率、总资产净利率、资产负债率、流动比率等四指标数据在当前报告期未取到，则取其上一报告期数据。"
             self.group_in_chinese = "低估小盘股"
-            # print self.group_in_chinese
             return self.get_small_cap_undervalued_stocks(stocks)
         elif self.group == "MA60":
             self.remarks = u"备注：" \
                            u"统计时剔除停牌和上市不足60天的股票。"
-
             self.group_in_chinese = "行业MA60"
-            # print self.group_in_chinese
             return self.get_MA60_pic(stocks)
         else:
             self.remarks = ""
@@ -282,7 +266,6 @@ class DataFormatter(object):
 
 
     def get_data(self, stocks, main_config):
-
         date = self.date
         trade_date = date["trade_date"]
         rpt_date_str = date["rpt_date_str"]
@@ -299,7 +282,6 @@ class DataFormatter(object):
                      ";ruleType=9;rptDate="+rpt_date_str+";industryType=1;year="+year_str
         result = w.wss(stocks, main_config["field_map"].keys(), params)
         codes = result.Codes
-        # print "codes",codes
         fields = result.Fields
         data = result.Data
         limit_date = trade_date - dt.timedelta(days=delta_days)
@@ -328,7 +310,6 @@ class DataFormatter(object):
         df_data = df_data.sort_values(by=self.industry)
         del df_data["HISTORY_HIGH"]
         del df_data["IPO_DATE"]
-
         return self.__completed_last_rpt_data(df_data)
 
     def __completed_last_rpt_data(self, df_data):
@@ -338,20 +319,15 @@ class DataFormatter(object):
         values = ROE.values.tolist()
         index = ROE.index.tolist()
         for key, value in enumerate(values):
-            # print "values",values
             if not isinstance(value, float):
                 lose_list.append(index[key])
         if lose_list:
-            # print "lose_list", lose_list
-
             last_data_result = w.wss(lose_list,"roe,roa,debttoassets,current", "rptDate="+self.date["last_rpt_date_str"])
             last_codes = last_data_result.Codes
             last_fields = last_data_result.Fields
-            # last_data = np.array(last_data_result.Data)
             last_data = last_data_result.Data
 
             last_data_dt = DataFrame(last_data,index=last_fields,columns=last_codes).T
-            # print "last_data_dt",last_data_dt
             # last_data_dt = last_data_dt.replace("None", np.nan)
             # if not last_data_dt.empty:
             #     where_are_nan = np.isnan(last_data_dt)
@@ -387,10 +363,7 @@ class DataFormatter(object):
 
         self.__write_into_book(data)
 
-
-
     def __write_into_book(self, data):
-
         self.sheet1.write(0, 0, "", self.set_style('Times New Roman', 220, True))
         row0 = data.columns
         column0 = data.index
@@ -406,7 +379,6 @@ class DataFormatter(object):
             for j in range(1, rows_count + 1):
                 for i in range(0, columns_count):
                     if i == 14:
-
                         cell_data = data[row0[i]][j - 1]
                         if cell_data:
                             if cell_data > dt.datetime.strptime("1900-01-01", '%Y-%m-%d'):
@@ -460,7 +432,6 @@ class DataFormatter(object):
                     if i == 18:
                         cell_data = data[row0[i]][j - 1]
                         if cell_data > dt.datetime.strptime("1900-01-01", '%Y-%m-%d'):
-
                             self.sheet1.write(j, i + 1, cell_data, dateFormat)
                         else:
                             self.sheet1.write(j, i + 1, "", content_style)
@@ -500,7 +471,6 @@ class DataFormatter(object):
         first_row.set_style(tall_style)
 
     def save_book_as_xls(self):
-
         file_name = self.date_mark + self.xls_cleanData_filename
         if not os.path.exists(file_name):
             self.book.save(file_name)
@@ -512,7 +482,6 @@ class DataFormatter(object):
                     break
 
     def save_df_to_excel(self,data_df):
-
         self.file_name = self.date_mark + self.xls_cleanData_filename
         if not os.path.exists(self.file_name):
             xlsx_output = pd.ExcelWriter(self.file_name)
@@ -531,10 +500,8 @@ class DataFormatter(object):
 
 #####################################################################
     def get_history_high_stocks(self, stocks, main_config):
-        # stocks = stocks[0:200]
 
         trade_date = self.date["trade_date"]
-
         delta_days = main_config["delta_days"]
         limit_date = trade_date - dt.timedelta(days=delta_days)
 
@@ -571,7 +538,6 @@ class DataFormatter(object):
 
             df_history_high_data = pd.concat([df_history_high_data, last_df_history_high_data], axis=1)
 
-
         columns = df_history_high_data.columns.tolist()
         df_history_high_data = df_history_high_data.replace(np.nan, 0)
         df_history_high_data["count"] = 0
@@ -583,7 +549,6 @@ class DataFormatter(object):
         df_history_high_data.to_excel(xlsx_output)
         xlsx_output.save()
         return history_high_stocks
-
 
     def get_stage_high_stocks(self, stocks, main_config):
         trade_date = self.date["trade_date"]
@@ -598,9 +563,7 @@ class DataFormatter(object):
         stage_high_stocks = df_stage_high_data[(df_stage_high_data["STAGE_HIGH"] == "TRUE")].index.tolist()
         return stage_high_stocks
 
-
     def get_stage_low_stocks(self, stocks, main_config):
-
         trade_date = self.date["trade_date"]
         param_n = main_config["param_n"]
         param_m_low = main_config["param_m_low"]
@@ -614,7 +577,6 @@ class DataFormatter(object):
         return stage_low_stocks
 
     def get_quarter_increase_stocks(self, stocks):
-
         if self.flag == "A":
             quarter_increase_result = w.wss(stocks, "qfa_cgrsales, qfa_cgrgr", "rptDate="+self.date["rpt_date_str"])
             print("quarter_increase_result", quarter_increase_result)
@@ -725,10 +687,7 @@ class DataFormatter(object):
                               "high_per,low_per,low_date_per,close,vhf",
                               "priceAdj=F;startDate="+start_date+";endDate="+self.date["today_str"]+
                               ";cycle=D;tradeDate="+self.date["trade_date"].strftime("%Y-%m-%d")+";VHF_N="+ str(day_2))
-        # print "prriod_result",prriod_result
         period_data = DataFrame(prriod_result.Data, columns=prriod_result.Codes, index=prriod_result.Fields).T
-
-        # print "period_data",period_data
 
         clean_df = pd.concat([ipo_data, period_data], axis=1)
         clean_df["high_percent"] =clean_df["LOW_PER"]/clean_df["HISTORY_HIGH"]
@@ -741,17 +700,13 @@ class DataFormatter(object):
         print "clean_df",clean_df
 
         stocks_result = clean_df.index.tolist()
-        # print stocks_result, len(stocks_result)
         return stocks_result
 
     def get_peg_pick_stocks(self, stocks):
-        # stocks = ["600987.SH"]
         text_trade_date = (self.date["trade_date"] - dt.timedelta(days=1)).strftime("%Y-%m-%d")
 
         str_after_two_year = str(int(self.date["year_str"])+2)
         str_after_one_year = str(int(self.date["year_str"]) + 1)
-
-
 
         after_two_year_data = w.wss(stocks,
                                  "pe_est_last,est_eps",
@@ -782,8 +737,6 @@ class DataFormatter(object):
         peg_df = peg_df[(peg_df["peg"] > 0) & (peg_df["peg"] < 2)]
         peg_df = peg_df[(peg_df["pe_est_last_"+self.date["year_str"]] > 0) & (peg_df["pe_est_last_"+self.date["year_str"]] < 60)]
 
-        print "peg_df", peg_df
-
         if self.flag == "A":
             gross_pick_result = w.wss(peg_df.index.tolist(),
                                       "eps_ttm,pb,yoy_or,yoyop,qfa_cgrsales,qfa_cgrop,qfa_yoysales",
@@ -792,12 +745,9 @@ class DataFormatter(object):
 
             gross_pick_df = DataFrame(gross_pick_result.Data, columns=gross_pick_result.Codes, index=gross_pick_result.Fields).T
 
-            print "gross_pick_df",gross_pick_df
             gross_pick_df = gross_pick_df[(gross_pick_df["PB"]>0) & (gross_pick_df["PB"]<12)]
             gross_pick_df = gross_pick_df[(gross_pick_df["YOY_OR"]>0) & (gross_pick_df["QFA_CGRSALES"]>0)]
             gross_pick_df = gross_pick_df[(gross_pick_df["YOYOP"] > 0) & (gross_pick_df["QFA_CGROP"] > 0)]
-
-            print "gross_pick_df1",gross_pick_df
 
             well_pick_result = w.wss(gross_pick_df.index.tolist(),
                                      "pe_ttm,sec_name,roa,roe,debttoassets,current,ocftosales,profittogr,industry_sw,"
@@ -830,10 +780,6 @@ class DataFormatter(object):
             score_df = score_df.dropna(axis=0, how='any')
 
             score_df["OCFTOPROFIT"] = score_df["OCFTOSALES"] / score_df["PROFITTOGR"]
-
-            # print "score_df",score_df
-            # print "score_df.index",score_df.index.tolist()
-            # print "score_df.column", score_df.columns.tolist()
 
             score_df["pe_score"] = 0
             score_df["pb_score"] = 0
