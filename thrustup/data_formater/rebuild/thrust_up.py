@@ -519,7 +519,6 @@ class DataFormatter(object):
         df_history_high_data = df_history_high_data.replace("TRUE", 1)
         last_history_high_stocks = history_high_stocks
         str_trade_date = trade_date.strftime("%Y%m%d")
-        # print df_history_high_data
 
         while last_history_high_stocks:
 
@@ -613,7 +612,7 @@ class DataFormatter(object):
                                             "rptDate=" + self.date["last_rpt_date_str"]+";unit=1;rptType=1;currencyType=")
             print("last_quarter_increase_result", last_quarter_increase_result)
             last_quarter_increase_codes = last_quarter_increase_result.Codes
-            last_quarter_increase_fields = last_quarter_increase_result.Fields
+            # last_quarter_increase_fields = last_quarter_increase_result.Fields
             last_quarter_increase_data = last_quarter_increase_result.Data
             last_df_quarter_increase_data = DataFrame(last_quarter_increase_data, index=["last_WGSD_GROSSPROFITMARGIN", "last_TOT_OPER_REV", "last_WGSD_EBIT_OPER"], columns=last_quarter_increase_codes).T
             # clean_df = pd.concat([clean_df, last_df_quarter_increase_data], axis=1)
@@ -622,15 +621,11 @@ class DataFormatter(object):
             cl_df["item1"] = (clean_df["WGSD_GROSSPROFITMARGIN"]-last_df_quarter_increase_data["last_WGSD_GROSSPROFITMARGIN"])
             cl_df["item2"] = (clean_df["TOT_OPER_REV"] - last_df_quarter_increase_data["last_TOT_OPER_REV"])
             cl_df["item3"] = (clean_df["WGSD_EBIT_OPER"] - last_df_quarter_increase_data["last_WGSD_EBIT_OPER"])
-            print("cl_df", cl_df.head(60))
             cl_df = cl_df[(cl_df["item1"]> 0) &
                           (cl_df["item3"] > 0) &
                           (cl_df["item2"] > 0)]
             clean_stocks = cl_df.index.tolist()
-            print("cl_df2", cl_df.head(60))
-            print("clean_stocks", clean_stocks)
             return clean_stocks
-
 
     def get_increase_holding_stocks(self, main_config):
         increase_holding_file = self.date_mark + main_config["increase_holding_file"]
@@ -640,7 +635,6 @@ class DataFormatter(object):
         else:
             ih_df = pd.read_excel(increase_holding_file,
                                                    header=0)
-            print ih_df
             del ih_df[u"披露日期"]
             stocks = ih_df.dropna(axis=0,how='any')[u"证券代码"].tolist()
             stocks_result = list(set(stocks))
@@ -649,11 +643,8 @@ class DataFormatter(object):
 
     def get_share_pledged_stocks(self, stocks):
         wss_result = w.wss(stocks, "share_pledgeda_pct","tradeDate=" + self.date["today_str"])
-        print wss_result
         share_pledged_data = DataFrame(wss_result.Data, columns=wss_result.Codes, index= wss_result.Fields).T
         final_stocks = share_pledged_data[share_pledged_data["SHARE_PLEDGEDA_PCT"] > 50].index.tolist()
-        print final_stocks
-        return final_stocks
 
     def get_thrust_up_plate_stocks(self, stocks):
 
@@ -680,7 +671,6 @@ class DataFormatter(object):
         susp_data = DataFrame(susp_result.Data, columns=susp_result.Codes, index=susp_result.Fields).T
         ipo_data = pd.concat([ipo_data, susp_data], axis=1)
         ipo_data = ipo_data[ipo_data["SUSP_DAYS"] < 1]
-        # print "susp_data",susp_data
 
         start_date = (self.date["trade_date"] - dt.timedelta(days=day_2)).strftime("%Y-%m-%d")
         prriod_result = w.wss(ipo_data.index.tolist(),
@@ -697,7 +687,6 @@ class DataFormatter(object):
                             (clean_df["low_percent"]<1.5)&
                             (clean_df["LOW_DATE_PER"] < (self.date["trade_date"] - dt.timedelta(days=day_3)))&
                             (clean_df["CLOSE"] >= clean_df["HIGH_PER"])]
-        print "clean_df",clean_df
 
         stocks_result = clean_df.index.tolist()
         return stocks_result
@@ -727,7 +716,6 @@ class DataFormatter(object):
                                       index=["pe_est_last_"+self.date["year_str"], "est_eps_"+self.date["year_str"]]).T
 
         peg_df = pd.concat([after_two_year_df, after_one_year_df, this_year_df], axis=1)
-
 
         peg_df["eps_acc"] = 0
         peg_df["peg"] = 0
@@ -766,17 +754,14 @@ class DataFormatter(object):
             last_report_df.rename(columns={"QFA_YOYSALES": "LAST_QFA_YOYSALES", "QFA_YOYPROFIT": "LAST_QFA_YOYPROFIT",
                                            "QFA_GROSSPROFITMARGIN":"LAST_QFA_GROSSPROFITMARGIN","QFA_NETPROFITMARGIN":"LAST_QFA_NETPROFITMARGIN"}, inplace=True)
 
-            print("last_report_df",last_report_df)
             # 获取上年年报的营收同比
             last_year_report_result = w.wss(gross_pick_df.index.tolist(),
                                        "yoy_or","rptDate=" + self.date["last_year_last_rpt_date_str"])
             last_year_report_result = DataFrame(last_year_report_result.Data, columns=last_year_report_result.Codes,
                                       index=last_year_report_result.Fields).T
             last_year_report_result.rename(columns={"YOY_OR":"LAST_YEAR_YOY_OR"}, inplace=True)
-            print("last_year_report_result",last_year_report_result)
 
             score_df = pd.concat([peg_df, gross_pick_df, well_pick_df,last_report_df,last_year_report_result], axis=1)
-            print "score_df",score_df
             score_df = score_df.dropna(axis=0, how='any')
 
             score_df["OCFTOPROFIT"] = score_df["OCFTOSALES"] / score_df["PROFITTOGR"]
