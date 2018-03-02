@@ -291,10 +291,16 @@ class DataFormatter(object):
             xq_fields = ["xq_wow_focus", "xq_accmfocus"]
             xq_trade_date = w.tdaysoffset(-2, today_str, "").Data[0][0]
             xq_params = "tradeDate=" + xq_trade_date.strftime("%Y%m%d")
+            print "#########################"
+            print "codes",codes
+            print "xq_fields",xq_fields
+            print "xq_params",xq_params
             xq_result = w.wss(codes, xq_fields, xq_params)
             xq_codes = xq_result.Codes
             xq_fields = xq_result.Fields
             xq_data = np.array(xq_result.Data)
+            print "xq_result",xq_result
+            print "###########  end   ##############"
             where_are_nan = np.isnan(xq_data)
             where_are_inf = np.isinf(xq_data)
             xq_data[where_are_nan] = 0
