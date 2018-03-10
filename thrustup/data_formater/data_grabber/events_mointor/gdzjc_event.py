@@ -48,7 +48,7 @@ def get_zjc_df(raw_dict):
         df_data.append(df_row_data)
 
     data_df = pd.DataFrame(df_data, columns=field_name)
-    data_df.to_excel("data_df.xls")
+    # data_df.to_excel("data_df.xls")
     print data_df
 
     data_df.drop(labels=["SHCode", "CompanyCode", "Close", "ChangePercent", "JYFS", "BDKS", "BDZGBBL",

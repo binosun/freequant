@@ -944,9 +944,9 @@ class DataFormatter(object):
                                           "yoy_or_score"] + score_df["yoynetprofit_deducted_score"]
 
             score_df.sort_values(by="peg", ascending=True, inplace=True)
-            xlsx_output = pd.ExcelWriter("full_date.xls")
-            score_df.to_excel(xlsx_output)
-            xlsx_output.save()
+            # xlsx_output = pd.ExcelWriter("full_date.xls")
+            # score_df.to_excel(xlsx_output)
+            # xlsx_output.save()
 
             score_df = score_df[(score_df["total_score"] >= 6)]
 
@@ -1020,7 +1020,7 @@ class DataFormatter(object):
 
         final_df = pd.DataFrame({u"行业":name, u"比例":rate})
         # final_df.sort_values(by=u"行业", ascending=True, inplace=True)
-        final_df.to_csv("MA60.csv", index=False, encoding="gb2312")
+        # final_df.to_csv("MA60.csv", index=False, encoding="gb2312")
 
         self.save_df_to_excel(final_df)
 
