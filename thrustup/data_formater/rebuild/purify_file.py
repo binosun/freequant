@@ -27,13 +27,13 @@ def purify_file():
     file_name_list.append((today - dt.timedelta(days=8)).strftime("%Y%m%d") + u"沪深港通持股.xlsx")
 
     if not os.path.exists(del_folder):
-        print u"创建文件目录", del_folder
+        print "创建文件目录", del_folder
         os.mkdir(del_folder)
 
     for file in file_name_list:
         abs_file_path = date_mark + file
         if not os.path.exists(abs_file_path):
-            print u"文件丢失",abs_file_path
+            print "文件丢失",abs_file_path
         else:
             shutil.move(abs_file_path, del_folder)
 
