@@ -49,7 +49,7 @@ def get_zjc_df(raw_dict):
 
     data_df = pd.DataFrame(df_data, columns=field_name)
     # data_df.to_excel("data_df.xls")
-    print data_df
+    # print data_df
 
     data_df.drop(labels=["SHCode", "CompanyCode", "Close", "ChangePercent", "JYFS", "BDKS", "BDZGBBL",
                          "BDHCYLTGSL", "BDJZ"], axis=1, inplace=True)
@@ -65,9 +65,9 @@ def get_zjc_df(raw_dict):
     list_BDSLZLTB = []
     for item in data_df["BDSLZLTB"]:
         cell = item.encode("utf-8")
-        print "cell",cell
+        # print "cell",cell
         num = float(cell.encode("utf-8")) if cell else 0.0
-        print num, type(num)
+        # print num, type(num)
         list_BDSLZLTB.append(num)
     data_df["BDSLZLTB"] = pd.Series(list_BDSLZLTB, index=data_df.index)
     # data_df["BDHCGBL"] = pd.Series(BDHCGBL_list, index=data_df.index)
