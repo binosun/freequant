@@ -8,7 +8,7 @@ import time
 import pandas as pd
 from bs4 import BeautifulSoup
 
-from freequant.thrustup.data_formater.common.toolkit import Toolkit
+from freequant.thrustup.data_formater.data_grabber.common.toolkit import Toolkit
 from freequant.thrustup.data_formater.data_grabber.formatter.announcement_xlwt_formatter import write_format_xls
 from snowball_login import make_session
 

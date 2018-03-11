@@ -10,9 +10,8 @@ from collections import OrderedDict
 
 import pandas as pd
 
+from freequant.thrustup.data_formater.data_grabber.common.date_counter import calculate_date
 from freequant.thrustup.data_formater.data_grabber.common.url_requester import urllib_requester
-
-from freequant.thrustup.data_formater.common.date_counter import calculate_date
 from freequant.thrustup.data_formater.data_grabber.formatter.hsgtzjl_xlwt_formatter import write_format_xls
 
 

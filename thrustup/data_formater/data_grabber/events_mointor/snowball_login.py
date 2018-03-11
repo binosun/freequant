@@ -2,9 +2,10 @@
 #coding: utf-8
 
 import cookielib
+
 import requests
 
-from freequant.thrustup.data_formater.common.toolkit import Toolkit
+from freequant.thrustup.data_formater.data_grabber.common.toolkit import Toolkit
 
 
 def make_session():

@@ -3,8 +3,8 @@
 from WindPy import *
 from pandas import DataFrame
 
-from freequant.thrustup.data_formater.common.config_reader import get_config
-from freequant.thrustup.data_formater.common.date_counter import calculate_date
+from freequant.thrustup.data_formater.data_grabber.common.config_reader import get_config
+from freequant.thrustup.data_formater.data_grabber.common.date_counter import calculate_date
 
 
 def get_wind_basic_data(stocks,flag="A"):

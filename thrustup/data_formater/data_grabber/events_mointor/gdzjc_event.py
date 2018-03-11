@@ -7,9 +7,9 @@ from collections import OrderedDict
 
 import pandas as pd
 from WindPy import *
-from freequant.thrustup.data_formater.data_grabber.common.url_requester import urllib_requester
 
-from freequant.thrustup.data_formater.common.date_counter import calculate_date
+from freequant.thrustup.data_formater.data_grabber.common.date_counter import calculate_date
+from freequant.thrustup.data_formater.data_grabber.common.url_requester import urllib_requester
 from freequant.thrustup.data_formater.data_grabber.common.wind_handler import get_wind_basic_data
 from freequant.thrustup.data_formater.data_grabber.formatter.zjc_xlwt_formatter import write_format_xls
 
