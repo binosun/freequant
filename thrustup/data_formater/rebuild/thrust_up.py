@@ -998,7 +998,6 @@ class DataFormatter(object):
 
         self.save_df_to_excel(final_df)
 
-        # print "final_df",final_df
         # # 绘图
         # plt.bar(range(len(rate)),rate, align='center', color='steelblue', alpha=0.8)
         # # 添加轴标签
@@ -1090,5 +1089,3 @@ def thrust_up_main():
 
 if __name__ == "__main__":
     thrust_up_main()
-
-
