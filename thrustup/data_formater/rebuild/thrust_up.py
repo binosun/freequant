@@ -312,7 +312,6 @@ class DataFormatter(object):
                     if xq_df_data[column][row] is not np.nan:
                         df_data[column][row] = xq_df_data[column][row]
 
-        # df_data = df_data[df_data["IPO_DATE"] < limit_date]
         df_data = df_data.sort_values(by=self.industry)
         del df_data["HISTORY_HIGH"]
         del df_data["IPO_DATE"]
@@ -334,12 +333,6 @@ class DataFormatter(object):
             last_data = last_data_result.Data
 
             last_data_dt = DataFrame(last_data,index=last_fields,columns=last_codes).T
-            # last_data_dt = last_data_dt.replace("None", np.nan)
-            # if not last_data_dt.empty:
-            #     where_are_nan = np.isnan(last_data_dt)
-            #     where_are_inf = np.isinf(last_data_dt)
-            #     last_data_dt[where_are_nan] = 0
-            #     last_data_dt[where_are_inf] = 0
 
             for column in last_data_dt.columns.tolist():
                 for row in last_data_dt.index.tolist():
@@ -644,7 +637,6 @@ class DataFormatter(object):
             del ih_df[u"披露日期"]
             stocks = ih_df.dropna(axis=0,how='any')[u"证券代码"].tolist()
             stocks_result = list(set(stocks))
-            # print "stocks", stocks_result
             return stocks_result
 
     def get_share_pledged_stocks(self, stocks):
@@ -823,12 +815,7 @@ class DataFormatter(object):
                                       score_df["qfa_yoysales_score"]+score_df["qfa_yoyprofit_score"]+score_df["qfa_grossprofitmargin_score"]+score_df["qfa_netprofitmargin_score"]
 
             score_df.sort_values(by="peg", ascending=True, inplace=True)
-            # xlsx_output = pd.ExcelWriter("full_date.xls")
-            # score_df.to_excel(xlsx_output)
-            # xlsx_output.save()
-
             score_df = score_df[(score_df["peg"]>0)&(score_df["peg"]<2) & (score_df["total_score"] >= 10)]
-
 
             name_map = [("SEC_NAME",u"股票简称"),("INDUSTRY_SW",u"申万一级行业"),("peg",u"计算PEG"),
                         ("pe_est_last_"+str_after_two_year,u"预测PE_"+str_after_two_year),
@@ -867,14 +854,12 @@ class DataFormatter(object):
             gross_pick_df = gross_pick_df[(gross_pick_df["YOY_OR"] > 0)]
             gross_pick_df = gross_pick_df[(gross_pick_df["YOYOP"] > 0)]
 
-            # print "gross_pick_df", gross_pick_df
             print "gross_pick_df.index.tolist()", gross_pick_df.index.tolist()
             well_pick_result = w.wss(gross_pick_df.index.tolist(),
                                      "pe_ttm,sec_name,roa,roe,debttoassets,current,profittogr,industry_hs,"
                                      "tot_oper_rev,cashflow_ttm,yoynetprofit_deducted",
                                      "rptDate=" + self.date[
                                          "rpt_date_str"] + ";unit=1;rptType=1;category=1;tradeDate=" + text_trade_date)
-            # print "well_pick_result", well_pick_result
             well_pick_df = DataFrame(well_pick_result.Data, columns=well_pick_result.Codes,
                                      index=well_pick_result.Fields).T
             print "well_pick_df", well_pick_df
@@ -971,8 +956,6 @@ class DataFormatter(object):
             self.save_df_to_excel(clean_df)
 
     def get_small_cap_undervalued_stocks(self, stocks):
-        # stocks = stocks[0:100]
-        # print stocks
 
         text_trade_date = (self.date["trade_date"] - dt.timedelta(days=1)).strftime("%Y-%m-%d")
         str_after_two_year = str(int(self.date["year_str"])+2)
@@ -986,11 +969,9 @@ class DataFormatter(object):
         cap_df = cap_df[(cap_df["MKT_CAP_ARD"]<5*10e9)& (cap_df["PE_TTM"]<30)& (cap_df["PB"]<4)&
                         (cap_df["PE_TTM"]>0)& (cap_df["YOY_OR"]>0)& (cap_df["YOYPROFIT"]>0)]
 
-        # self.get_peg_pick_stocks(cap_df.index.tolist())
         return cap_df.index.tolist()
 
     def get_MA60_pic(self,all_stocks):
-        # all_stocks = all_stocks[0:10]
         # import matplotlib.pyplot as plt
         # # 中文乱码的处理
         # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']
@@ -1003,24 +984,17 @@ class DataFormatter(object):
             "MA,industry_citic,close", "tradeDate=" + text_trade_date + ";MA_N=60;priceAdj=F;cycle=D;industryType=1")
 
         result_df = DataFrame(request_result.Data, columns=request_result.Codes, index=request_result.Fields).T
-        # result_df.replace(None, np.nan)
-        # result_df.to_csv("raw_request.csv", index=True, encoding="gb2312")
         result_df.dropna(axis=1,how="any")
-        # result_df.to_csv("request.csv",index=True,encoding="gb2312")
         result_df["MA-CLOSE"] = result_df["MA"] < result_df["CLOSE"]
         result_df.replace(True, 1)
         result_df.replace(False, 0)
 
         pivot = result_df.pivot_table(index = ["INDUSTRY_CITIC"],values=["CLOSE","MA-CLOSE"],aggfunc=[np.count_nonzero])
-        # pivot.to_csv("pivot.csv",index=True,encoding="gb2312")
-        # result = pivot["CLOSE"]/pivot["MA-CLOSE"]
         result = pivot.reset_index()
         rate = result["count_nonzero"]["MA-CLOSE"]/result["count_nonzero"]["CLOSE"]
         name = result["INDUSTRY_CITIC"]
 
         final_df = pd.DataFrame({u"行业":name, u"比例":rate})
-        # final_df.sort_values(by=u"行业", ascending=True, inplace=True)
-        # final_df.to_csv("MA60.csv", index=False, encoding="gb2312")
 
         self.save_df_to_excel(final_df)
 
