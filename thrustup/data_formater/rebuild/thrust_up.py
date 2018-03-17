@@ -698,8 +698,6 @@ class DataFormatter(object):
         after_two_year_data = w.wss(stocks,
                                  "pe_est_last,est_eps",
                                  "year="+str_after_two_year +";tradeDate=" + text_trade_date)
-
-
         after_two_year_df = DataFrame(after_two_year_data.Data, columns=after_two_year_data.Codes,
                                       index=["pe_est_last_"+str_after_two_year, "est_eps_"+str_after_two_year]).T
         after_two_year_df = after_two_year_df.dropna(axis=0, how='any')
