@@ -346,7 +346,7 @@ class DataFormatter(object):
     def main(self):
         stocks = self.get_all_stocks(self.config["stocks_file"])
         query_stocks = self.get_query_stocks(stocks, self.config)
-        if not query_stocks:
+        if not query_stocks or len(query_stocks) < 2:
             print("待选股票池为空")
             return
         df_data = self.get_data(query_stocks, self.config)
@@ -698,10 +698,14 @@ class DataFormatter(object):
         after_two_year_data = w.wss(stocks,
                                  "pe_est_last,est_eps",
                                  "year="+str_after_two_year +";tradeDate=" + text_trade_date)
+
+
         after_two_year_df = DataFrame(after_two_year_data.Data, columns=after_two_year_data.Codes,
                                       index=["pe_est_last_"+str_after_two_year, "est_eps_"+str_after_two_year]).T
         after_two_year_df = after_two_year_df.dropna(axis=0, how='any')
 
+        if not after_two_year_df.index.tolist():
+            return
         after_one_year_data = w.wss(after_two_year_df.index.tolist(),
                                  "pe_est_last,est_eps",
                                  "year="+str_after_one_year +";tradeDate=" + text_trade_date)
@@ -730,7 +734,6 @@ class DataFormatter(object):
                                       ";rptType=1;tradeDate="+text_trade_date+";ruleType=9")
 
             gross_pick_df = DataFrame(gross_pick_result.Data, columns=gross_pick_result.Codes, index=gross_pick_result.Fields).T
-
             gross_pick_df = gross_pick_df[(gross_pick_df["PB"]>0) & (gross_pick_df["PB"]<12)]
             gross_pick_df = gross_pick_df[(gross_pick_df["YOY_OR"]>0) & (gross_pick_df["QFA_CGRSALES"]>0)]
             gross_pick_df = gross_pick_df[(gross_pick_df["YOYOP"] > 0) & (gross_pick_df["QFA_CGROP"] > 0)]

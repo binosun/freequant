@@ -9,8 +9,8 @@ from events_mointor.hsgtzjl_event import hsgtzjl_event_main
 from events_mointor.rzrq_event import rzrq_event_main
 from events_mointor.zlzjl_event import zlzjl_event_main
 
-# from events_mointor.announcement_event import announcement_main
-# from email_sender.email_sender import EmailEngine
+from events_mointor.announcement_event import announcement_main
+from email_sender.email_sender import EmailEngine
 
 
 def event_engine_main():
