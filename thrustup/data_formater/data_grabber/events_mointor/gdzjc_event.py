@@ -48,8 +48,6 @@ def get_zjc_df(raw_dict):
         df_data.append(df_row_data)
 
     data_df = pd.DataFrame(df_data, columns=field_name)
-    # data_df.to_excel("data_df.xls")
-    # print data_df
 
     data_df.drop(labels=["SHCode", "CompanyCode", "Close", "ChangePercent", "JYFS", "BDKS", "BDZGBBL",
                          "BDHCYLTGSL", "BDJZ"], axis=1, inplace=True)
@@ -65,19 +63,15 @@ def get_zjc_df(raw_dict):
     list_BDSLZLTB = []
     for item in data_df["BDSLZLTB"]:
         cell = item.encode("utf-8")
-        # print "cell",cell
         num = float(cell.encode("utf-8")) if cell else 0.0
-        # print num, type(num)
         list_BDSLZLTB.append(num)
     data_df["BDSLZLTB"] = pd.Series(list_BDSLZLTB, index=data_df.index)
-    # data_df["BDHCGBL"] = pd.Series(BDHCGBL_list, index=data_df.index)
     data_df.rename(columns={"SCode"         : u"代码", "SName": u"名称", "FX": u"增减",
                             "ChangeNum"     : u"变动数量(万股)", "BDSLZLTB": u"占总流通股比例%",
                             "BDHCYLTSLZLTGB": u"变动后持流通股占总流通股比%",
                              "BDJZ"         : u"变动截止日期",
                             "NOTICEDATE"    : u"最新公告日期"},
                    inplace=True)
-    # data_df.to_excel("jzcData.xlsx")
     return data_df
 
 def group_zjc_df(zjc_df, key):
@@ -88,7 +82,6 @@ def group_zjc_df(zjc_df, key):
         grouped_df[u"最新公告日期"] = zjc_df[u"最新公告日期"].groupby(zjc_df[u"代码"]).max()
     grouped_df[u"变动数量(万股)"] = zjc_df[u"变动数量(万股)"].groupby(zjc_df[u"代码"]).sum()
     grouped_df[u"占总流通股比例%"] = zjc_df[u"占总流通股比例%"].groupby(zjc_df[u"代码"]).sum()
-    # grouped_df[u"变动后持股比例%"] = zjc_df[u"变动后持股比例%"].groupby(zjc_df[u"代码"]).sum()
     grouped_df.sort_values(by=u"占总流通股比例%", ascending=False, inplace=True)
     return grouped_df
 
@@ -104,7 +97,6 @@ def purify_zjc_df(df):
         mid = df[column_name]
         df.drop(labels=[column_name], axis=1, inplace=True)
         df.insert(columns_order[column_name], column_name, mid)
-        # print column_name,df.head(5)
     return df
 
 def gdzjc_event_main():
@@ -124,13 +116,9 @@ def gdzjc_event_main():
         format_stocks = grouped_df.index.tolist()
         wind_df = get_wind_basic_data(format_stocks)
 
-        # print "grouped_df",grouped_df
-        # print "wind_df",wind_df
         new_zjc_df = pd.concat((grouped_df,wind_df), axis=1)
-        # print "new_zjc_df",new_zjc_df
         pure_df = purify_zjc_df(new_zjc_df)
         write_format_xls(pure_df, zjc_sheet_name[key], zjc_sheet_name[key])
-        # break
 
     return df_list  # [jzc, jjc]
 

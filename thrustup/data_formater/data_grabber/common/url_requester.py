@@ -13,7 +13,6 @@ def urllib_requester(url,header):
     request = urllib2.Request(url, headers=header)
     response = urllib2.urlopen(request)
     html = response.read()
-    print "html", type(html), html
     if isinstance(html, str):
         try:
             url_response = html.decode('UTF-8')
