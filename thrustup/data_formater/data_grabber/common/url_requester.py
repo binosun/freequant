@@ -22,6 +22,5 @@ def urllib_requester(url,header):
             return url_response
 
 if __name__ == "__main__":
-    print "hello"
     urllib_requester("https://xueqiu.com/service/partials/home/timeline?source=news&_=1512965940245")
 

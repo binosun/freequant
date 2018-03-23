@@ -291,16 +291,10 @@ class DataFormatter(object):
             xq_fields = ["xq_wow_focus", "xq_accmfocus"]
             xq_trade_date = w.tdaysoffset(-2, today_str, "").Data[0][0]
             xq_params = "tradeDate=" + xq_trade_date.strftime("%Y%m%d")
-            print "#########################"
-            print "codes",codes
-            print "xq_fields",xq_fields
-            print "xq_params",xq_params
             xq_result = w.wss(codes, xq_fields, xq_params)
             xq_codes = xq_result.Codes
             xq_fields = xq_result.Fields
             xq_data = np.array(xq_result.Data)
-            print "xq_result",xq_result
-            print "###########  end   ##############"
             where_are_nan = np.isnan(xq_data)
             where_are_inf = np.isinf(xq_data)
             xq_data[where_are_nan] = 0
@@ -350,10 +344,8 @@ class DataFormatter(object):
             print("待选股票池为空")
             return
         df_data = self.get_data(query_stocks, self.config)
-        print "df_data",df_data
         self.create_and_write_book(df_data)
         self.save_book_as_xls()
-
 
     def create_and_write_book(self, data):
         if not self.book:
@@ -577,28 +569,21 @@ class DataFormatter(object):
     def get_quarter_increase_stocks(self, stocks):
         if self.flag == "A":
             quarter_increase_result = w.wss(stocks, "qfa_cgrsales, qfa_cgrgr", "rptDate="+self.date["rpt_date_str"])
-            print("quarter_increase_result", quarter_increase_result)
             quarter_increase_codes = quarter_increase_result.Codes
             quarter_increase_fields = quarter_increase_result.Fields
             quarter_increase_data = quarter_increase_result.Data
             df_quarter_increase_data = DataFrame(quarter_increase_data, index=quarter_increase_fields, columns=quarter_increase_codes).T
             step1_stocks = df_quarter_increase_data[(df_quarter_increase_data["QFA_CGRSALES"] > 0) & (df_quarter_increase_data["QFA_CGRGR"] > 0)].index.tolist()
-            print("step1_stocks", step1_stocks)
             qfa_gpm_result = w.wss(step1_stocks, "qfa_grossprofitmargin", "rptDate="+self.date["rpt_date_str"])
             last_qfa_gpm_result = w.wss(step1_stocks, "qfa_grossprofitmargin", "rptDate="+self.date["last_rpt_date_str"])
-            print("qfa_gpm_result", qfa_gpm_result)
-            print("last_qfa_gpm_result", last_qfa_gpm_result)
             qfa_gpm_data = DataFrame([qfa_gpm_result.Data[0], last_qfa_gpm_result.Data[0]], index=["qfa_gpm", "last_qfa_gpm"], columns=qfa_gpm_result.Codes).T
-            print("qfa_gpm_data", qfa_gpm_data)
             quarter_increase_stocks = qfa_gpm_data[(qfa_gpm_data["qfa_gpm"] != np.nan) &
                                                    (qfa_gpm_data["last_qfa_gpm"] != np.nan) &
                                                    (qfa_gpm_data["qfa_gpm"] > qfa_gpm_data["last_qfa_gpm"])].index.tolist()
 
-            print("quarter_increase_stocks", quarter_increase_stocks, len(quarter_increase_stocks))
             return quarter_increase_stocks
         else:
             quarter_increase_result = w.wss(stocks, "wgsd_grossprofitmargin,tot_oper_rev,wgsd_ebit_oper", "rptDate="+self.date["rpt_date_str"]+";unit=1;rptType=1;currencyType=")
-            print("quarter_increase_result", quarter_increase_result)
             quarter_increase_codes = quarter_increase_result.Codes
             quarter_increase_fields = quarter_increase_result.Fields
             quarter_increase_data = quarter_increase_result.Data
@@ -611,10 +596,8 @@ class DataFormatter(object):
                                             "rptDate=" + self.date["last_rpt_date_str"]+";unit=1;rptType=1;currencyType=")
             print("last_quarter_increase_result", last_quarter_increase_result)
             last_quarter_increase_codes = last_quarter_increase_result.Codes
-            # last_quarter_increase_fields = last_quarter_increase_result.Fields
             last_quarter_increase_data = last_quarter_increase_result.Data
             last_df_quarter_increase_data = DataFrame(last_quarter_increase_data, index=["last_WGSD_GROSSPROFITMARGIN", "last_TOT_OPER_REV", "last_WGSD_EBIT_OPER"], columns=last_quarter_increase_codes).T
-            # clean_df = pd.concat([clean_df, last_df_quarter_increase_data], axis=1)
 
             cl_df = pd.DataFrame()
             cl_df["item1"] = (clean_df["WGSD_GROSSPROFITMARGIN"]-last_df_quarter_increase_data["last_WGSD_GROSSPROFITMARGIN"])
@@ -855,7 +838,6 @@ class DataFormatter(object):
             gross_pick_df = gross_pick_df[(gross_pick_df["YOY_OR"] > 0)]
             gross_pick_df = gross_pick_df[(gross_pick_df["YOYOP"] > 0)]
 
-            print "gross_pick_df.index.tolist()", gross_pick_df.index.tolist()
             well_pick_result = w.wss(gross_pick_df.index.tolist(),
                                      "pe_ttm,sec_name,roa,roe,debttoassets,current,profittogr,industry_hs,"
                                      "tot_oper_rev,cashflow_ttm,yoynetprofit_deducted",
@@ -863,8 +845,6 @@ class DataFormatter(object):
                                          "rpt_date_str"] + ";unit=1;rptType=1;category=1;tradeDate=" + text_trade_date)
             well_pick_df = DataFrame(well_pick_result.Data, columns=well_pick_result.Codes,
                                      index=well_pick_result.Fields).T
-            print "well_pick_df", well_pick_df
-
 
             # 获取上年年报的营收同比
             last_year_report_result = w.wss(gross_pick_df.index.tolist(),
@@ -875,7 +855,6 @@ class DataFormatter(object):
 
             score_df = pd.concat([peg_df, gross_pick_df, well_pick_df, last_year_report_df], axis=1)
             score_df = score_df.dropna(axis=0, how='any')
-
 
             score_df["pe_score"] = 0
             score_df["pb_score"] = 0
@@ -890,7 +869,6 @@ class DataFormatter(object):
 
             score_df["yoy_or_score"] = 0
             score_df["yoynetprofit_deducted_score"] = 0
-
 
             score_df["total_score"] = 0
 
@@ -910,11 +888,7 @@ class DataFormatter(object):
                                                       [0])  # 资产负债率
             score_df["current_score"] = np.where(score_df["CURRENT"] > 2,
                                                  np.where(score_df["CURRENT"] > 5, [2], [1]), [0])  # 流动比率
-            # 现金流指标
-            # score_df["ocf_score"] = np.where((score_df["OCFTOSALES"] > 0) & (score_df["TOT_OPER_REV"] > 0), [1],
-            #                                  [0])  # 经营性现金净流量>0
             score_df["cashflow_score"] = np.where(score_df["CASHFLOW_TTM"] > 0, [1], [0])  # 现金净流量（TTM）
-            # score_df["ocftoprofit_score"] = np.where(score_df["OCFTOPROFIT"] > 1, [2], [0])  # 经营性现金流/净利润
             # 成长性指标
             score_df["yoy_or_score"] = np.where(score_df["YOY_OR"] > 15,
                                                 np.where(score_df["YOY_OR"] > 30, [2], [1]), [0])  # 营业收入同比增长率
