@@ -264,7 +264,6 @@ class DataFormatter(object):
             self.group_in_chinese = ""
             return stocks
 
-
     def get_data(self, stocks, main_config):
         date = self.date
         trade_date = date["trade_date"]
@@ -499,10 +498,7 @@ class DataFormatter(object):
         param_n = main_config["param_n"]
         history_high_params = "tradeDate="+trade_date.strftime("%Y%m%d")+";priceAdj=F;n="+param_n
         history_high_result = w.wss(stocks, "history_high,ipo_date", history_high_params)
-        history_high_codes = history_high_result.Codes
-        history_high_fields = history_high_result.Fields
-        history_high_data = history_high_result.Data
-        df_history_high_data = DataFrame(history_high_data, index=history_high_fields, columns=history_high_codes).T
+        df_history_high_data = DataFrame(history_high_result.Data, index=history_high_result.Fields, columns=history_high_result.Codes).T
         df_history_high_data = df_history_high_data[(df_history_high_data["HISTORY_HIGH"] == "TRUE")&(df_history_high_data["IPO_DATE"] < limit_date)]
         history_high_stocks = df_history_high_data.index.tolist()
         del df_history_high_data["IPO_DATE"]
@@ -594,7 +590,6 @@ class DataFormatter(object):
             step1_stocks = clean_df.index.tolist()
             last_quarter_increase_result = w.wss(step1_stocks, "wgsd_grossprofitmargin,tot_oper_rev,wgsd_ebit_oper",
                                             "rptDate=" + self.date["last_rpt_date_str"]+";unit=1;rptType=1;currencyType=")
-            print("last_quarter_increase_result", last_quarter_increase_result)
             last_quarter_increase_codes = last_quarter_increase_result.Codes
             last_quarter_increase_data = last_quarter_increase_result.Data
             last_df_quarter_increase_data = DataFrame(last_quarter_increase_data, index=["last_WGSD_GROSSPROFITMARGIN", "last_TOT_OPER_REV", "last_WGSD_EBIT_OPER"], columns=last_quarter_increase_codes).T
