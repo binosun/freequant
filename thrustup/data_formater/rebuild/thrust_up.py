@@ -321,11 +321,8 @@ class DataFormatter(object):
                 lose_list.append(index[key])
         if lose_list:
             last_data_result = w.wss(lose_list,"roe,roa,debttoassets,current", "rptDate="+self.date["last_rpt_date_str"])
-            last_codes = last_data_result.Codes
-            last_fields = last_data_result.Fields
-            last_data = last_data_result.Data
 
-            last_data_dt = DataFrame(last_data,index=last_fields,columns=last_codes).T
+            last_data_dt = DataFrame(last_data_result.Data,index=last_data_result.Fields,columns=last_data_result.Codes).T
 
             for column in last_data_dt.columns.tolist():
                 for row in last_data_dt.index.tolist():
@@ -676,6 +673,8 @@ class DataFormatter(object):
         after_two_year_data = w.wss(stocks,
                                  "pe_est_last,est_eps",
                                  "year="+str_after_two_year +";tradeDate=" + text_trade_date)
+        print "year="+str_after_two_year +";tradeDate=" + text_trade_date
+        print "len stocks" ,len(stocks)
         after_two_year_df = DataFrame(after_two_year_data.Data, columns=after_two_year_data.Codes,
                                       index=["pe_est_last_"+str_after_two_year, "est_eps_"+str_after_two_year]).T
         after_two_year_df = after_two_year_df.dropna(axis=0, how='any')
@@ -1001,61 +1000,61 @@ class HShareData(DataFormatter):
 
 
 def thrust_up_main():
-    # # 创历史新高
-    A_stocks_data = AShareData("A", "INDUSTRY_SW", "history_high")
-    A_stocks_data.main()
-    H_stocks_data = HShareData("H", "INDUSTRY_HS", "history_high")
-    H_stocks_data.main()
+    # # # 创历史新高
+    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "history_high")
+    # A_stocks_data.main()
+    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "history_high")
+    # H_stocks_data.main()
+    # #
+    # # # 创阶段新高
+    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "stage_high")
+    # A_stocks_data.main()
+    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "stage_high")
+    # H_stocks_data.main()
     #
-    # # 创阶段新高
-    A_stocks_data = AShareData("A", "INDUSTRY_SW", "stage_high")
-    A_stocks_data.main()
-    H_stocks_data = HShareData("H", "INDUSTRY_HS", "stage_high")
-    H_stocks_data.main()
-
-    ## 创阶段新低
-    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "stage_low")
+    # ## 创阶段新低
+    # # A_stocks_data = AShareData("A", "INDUSTRY_SW", "stage_low")
+    # # A_stocks_data.main()
+    # # H_stocks_data = HShareData("H", "INDUSTRY_HS", "stage_low")
+    # # H_stocks_data.main()
+    #
+    # # 环比增长
+    # # A_stocks_data = AShareData("A", "INDUSTRY_SW", "quarter_increase")
+    # # A_stocks_data.main()
+    # # H_stocks_data = HShareData("H", "INDUSTRY_HS", "quarter_increase")
+    # # H_stocks_data.main()
+    #
+    # # # 股东增持
+    # # # 公司行动事件汇总——全部A股、本周——公司资料变更
+    # # # 将股东增持文件命名为ih_A.xlsx
+    # # A_stocks_data = AShareData("A", "INDUSTRY_SW", "increase_holding")
+    # # A_stocks_data.main()
+    # # H_stocks_data = HShareData("H", "INDUSTRY_HS", "increase_holding")
+    # # H_stocks_data.main()
+    #
+    # # 质押比例
+    # # A_stocks_data = AShareData("A", "INDUSTRY_SW", "share_pledged")
+    # # A_stocks_data.main()
+    #
+    # # 平台突破
+    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "thrust_up_plate")
     # A_stocks_data.main()
-    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "stage_low")
+    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "thrust_up_plate")
     # H_stocks_data.main()
-
-    # 环比增长
-    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "quarter_increase")
-    # A_stocks_data.main()
-    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "quarter_increase")
-    # H_stocks_data.main()
-
-    # # 股东增持
-    # # 公司行动事件汇总——全部A股、本周——公司资料变更
-    # # 将股东增持文件命名为ih_A.xlsx
-    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "increase_holding")
-    # A_stocks_data.main()
-    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "increase_holding")
-    # H_stocks_data.main()
-
-    # 质押比例
-    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "share_pledged")
-    # A_stocks_data.main()
-
-    # 平台突破
-    A_stocks_data = AShareData("A", "INDUSTRY_SW", "thrust_up_plate")
-    A_stocks_data.main()
-    H_stocks_data = HShareData("H", "INDUSTRY_HS", "thrust_up_plate")
-    H_stocks_data.main()
-
+    #
     # peg选股
     A_stocks_data = AShareData("A", "INDUSTRY_SW", "peg_pick")
     A_stocks_data.main()
-    H_stocks_data = AShareData("H", "INDUSTRY_HS", "peg_pick")
-    H_stocks_data.main()
-
-    # A股小市值低估值统计
-    A_stocks_data = AShareData("A", "INDUSTRY_SW", "small_cap_undervalue")
-    A_stocks_data.main()
-
-    # 中信行业MA60统计
-    A_stocks_data = AShareData("A", "INDUSTRY_CITIC", "MA60")
-    A_stocks_data.main()
+    # H_stocks_data = AShareData("H", "INDUSTRY_HS", "peg_pick")
+    # H_stocks_data.main()
+    #
+    # # A股小市值低估值统计
+    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "small_cap_undervalue")
+    # A_stocks_data.main()
+    #
+    # # 中信行业MA60统计
+    # A_stocks_data = AShareData("A", "INDUSTRY_CITIC", "MA60")
+    # A_stocks_data.main()
 
 if __name__ == "__main__":
     thrust_up_main()
