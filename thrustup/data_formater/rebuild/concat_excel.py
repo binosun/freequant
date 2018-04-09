@@ -417,11 +417,12 @@ class Concater(object):
                         continue
                     if i == 15:
                         if cell_data:
-                            if cell_data > dt.datetime.strptime("1900-01-01", '%Y-%m-%d'):
-                                dateFormat = copy.deepcopy(content_style)
-                                dateFormat.num_format_str = 'yyy-mm-dd'
-                                self.sheet1.write(j, i + 1, cell_data, dateFormat)
-                            else:
+                            # print cell_data
+                            # if cell_data > dt.datetime.strptime("1900-01-01", '%Y-%m-%d'):
+                            #     dateFormat = copy.deepcopy(content_style)
+                            #     dateFormat.num_format_str = 'yyy-mm-dd'
+                            #     self.sheet1.write(j, i + 1, cell_data, dateFormat)
+                            # else:
                                 self.sheet1.write(j, i + 1, "", content_style)
                         else:
                             self.sheet1.write(j, i + 1, "", content_style)
@@ -538,8 +539,6 @@ class Concater(object):
         columns_count = len(row0)
         rows_count = len(column0)
 
-        # print "self.main_df", self.main_df.head(5)
-
 
         for i in range(1, columns_count + 1):
             self.sheet1.write(0, i, row0[i - 1], self.set_style('Times New Roman', 220, True, True))  # 第一行
@@ -552,11 +551,9 @@ class Concater(object):
             for i in range(0, columns_count):
                 cell_data = self.main_df[row0[i]][j - 1]
                 cell_data = "" if cell_data is np.nan else cell_data
-                # print i,j,cell_data,type(cell_data)
 
                 cell_data = round(cell_data, 2) if isinstance(cell_data, float) else cell_data
                 cell_data = round(cell_data, 0) if isinstance(cell_data, np.int64) else cell_data
-                # print cell_data,type(cell_data)
 
                 self.sheet1.write(j, i + 1, cell_data, content_style)
 
