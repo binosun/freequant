@@ -106,19 +106,21 @@ def gdzjc_event_main():
     for key in url_dict:
 
         url = url_dict[key]
+        print "url", url
         response_dict = request_url(url, header)
         zjc_df = get_zjc_df(response_dict)
         # write_simple_xls(zjc_df, "raw_" + key)
 
         grouped_df = group_zjc_df(zjc_df,key)
         # write_format_xls(grouped_df, key)
+        print "grouped_df",grouped_df
 
-        format_stocks = grouped_df.index.tolist()
-        wind_df = get_wind_basic_data(format_stocks)
-
-        new_zjc_df = pd.concat((grouped_df,wind_df), axis=1)
-        pure_df = purify_zjc_df(new_zjc_df)
-        write_format_xls(pure_df, zjc_sheet_name[key], zjc_sheet_name[key])
+        # format_stocks = grouped_df.index.tolist()
+        # wind_df = get_wind_basic_data(format_stocks)
+        #
+        # new_zjc_df = pd.concat((grouped_df,wind_df), axis=1)
+        # pure_df = purify_zjc_df(new_zjc_df)
+        write_format_xls(grouped_df, zjc_sheet_name[key], zjc_sheet_name[key])
 
     return df_list  # [jzc, jjc]
 
