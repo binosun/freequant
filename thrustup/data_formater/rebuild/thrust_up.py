@@ -848,6 +848,8 @@ class DataFormatter(object):
 
             score_df = pd.concat([peg_df, gross_pick_df, well_pick_df, last_year_report_df], axis=1)
             score_df = score_df.dropna(axis=0, how='any')
+            if score_df.empty:
+                return
 
             score_df["pe_score"] = 0
             score_df["pb_score"] = 0
@@ -865,6 +867,7 @@ class DataFormatter(object):
 
             score_df["total_score"] = 0
 
+            print "score_df", score_df
             # 估值指标
             score_df["pe_score"] = np.where(score_df["PE_TTM"] < 40, np.where(score_df["PE_TTM"] < 20, [2], [1]),
                                             [0])  # 市盈率PE（TTM）
@@ -944,12 +947,13 @@ class DataFormatter(object):
         # # 中文乱码的处理
         # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']
         # plt.rcParams['axes.unicode_minus'] = False
-
+        # all_stocks = all_stocks[0:3]
         text_trade_date = (self.date["trade_date"]).strftime("%Y-%m-%d")
-
         request_result = w.wss(
             all_stocks,
             "MA,industry_citic,close", "tradeDate=" + text_trade_date + ";MA_N=60;priceAdj=F;cycle=D;industryType=1")
+
+        print request_result
 
         result_df = DataFrame(request_result.Data, columns=request_result.Codes, index=request_result.Fields).T
         result_df.dropna(axis=1,how="any")
@@ -985,6 +989,45 @@ class DataFormatter(object):
         # plt.show()
 
 
+    # def get_MA60_pic(self,all_stocks):
+    #     # import matplotlib.pyplot as plt
+    #     # # 中文乱码的处理
+    #     # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']
+    #     # plt.rcParams['axes.unicode_minus'] = False
+    #     import time
+    #     self.date["trade_date"] = dt.datetime.strptime("20161231","%Y%m%d")
+    #     text_trade_date = (self.date["trade_date"]).strftime("%Y-%m-%d")
+    #
+    #     last_date = self.date["trade_date"]
+    #     print "last_date",last_date,type(last_date)
+    #     final_df = pd.DataFrame()
+    #     while last_date >= dt.datetime.strptime("20161130","%Y%m%d"):
+    #         text_trade_date = last_date.strftime("%Y-%m-%d")
+    #         print "text_trade_date",text_trade_date
+    #         request_result = w.wss(
+    #             all_stocks,
+    #             "MA,industry_citic,close", "tradeDate=" + text_trade_date + ";MA_N=60;priceAdj=F;cycle=D;industryType=1")
+    #
+    #         result_df = DataFrame(request_result.Data, columns=request_result.Codes, index=request_result.Fields).T
+    #         result_df.dropna(axis=1,how="any")
+    #         print result_df.head(5)
+    #         result_df["MA-CLOSE"] = result_df["MA"] < result_df["CLOSE"]
+    #         result_df.replace(True, 1)
+    #         result_df.replace(False, 0)
+    #
+    #         pivot = result_df.pivot_table(index = ["INDUSTRY_CITIC"],values=["CLOSE","MA-CLOSE"],aggfunc=[np.count_nonzero])
+    #         result = pivot.reset_index()
+    #         rate = result["count_nonzero"]["MA-CLOSE"]/result["count_nonzero"]["CLOSE"]
+    #         name = result["INDUSTRY_CITIC"]
+    #         # final_df = pd.concat([final_df, pd.DataFrame({u"行业":name, text_trade_date:rate})],axis=1)
+    #         final_df = pd.concat([final_df, pd.DataFrame({text_trade_date: rate},index=name)],axis=1)
+    #         last_date = last_date - dt.timedelta(days=7)
+    #
+    #
+    #     xlsx_output = pd.ExcelWriter(text_trade_date+".xls")
+    #     final_df.to_excel(xlsx_output, float_format = '%.2f')
+    #     xlsx_output.save()
+    #     # self.save_df_to_excel(final_df)
 
 #############################################################
 

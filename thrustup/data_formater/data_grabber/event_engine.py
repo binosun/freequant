@@ -19,10 +19,8 @@ def event_engine_main():
 
     w.start()
     gdzjc_event_main()
-    ggzjc_event_main()
     zlzjl_event_main()
 
-    ggcgbd_event_main()
     hsgtzjl_event_main()
     rzrq_event_main()
 
