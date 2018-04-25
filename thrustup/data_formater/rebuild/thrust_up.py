@@ -1054,45 +1054,45 @@ def thrust_up_main():
     H_stocks_data = HShareData("H", "INDUSTRY_HS", "stage_high")
     H_stocks_data.main()
 
-    ## 创阶段新低
-    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "stage_low")
+    # ## 创阶段新低
+    # # A_stocks_data = AShareData("A", "INDUSTRY_SW", "stage_low")
+    # # A_stocks_data.main()
+    # # H_stocks_data = HShareData("H", "INDUSTRY_HS", "stage_low")
+    # # H_stocks_data.main()
+    #
+    # # 环比增长
+    # # A_stocks_data = AShareData("A", "INDUSTRY_SW", "quarter_increase")
+    # # A_stocks_data.main()
+    # # H_stocks_data = HShareData("H", "INDUSTRY_HS", "quarter_increase")
+    # # H_stocks_data.main()
+    #
+    # # # 股东增持
+    # # # 公司行动事件汇总——全部A股、本周——公司资料变更
+    # # # 将股东增持文件命名为ih_A.xlsx
+    # # A_stocks_data = AShareData("A", "INDUSTRY_SW", "increase_holding")
+    # # A_stocks_data.main()
+    # # H_stocks_data = HShareData("H", "INDUSTRY_HS", "increase_holding")
+    # # H_stocks_data.main()
+    #
+    # # 质押比例
+    # # A_stocks_data = AShareData("A", "INDUSTRY_SW", "share_pledged")
+    # # A_stocks_data.main()
+    #
+    # # 平台突破
+    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "thrust_up_plate")
     # A_stocks_data.main()
-    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "stage_low")
+    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "thrust_up_plate")
     # H_stocks_data.main()
-
-    # 环比增长
-    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "quarter_increase")
+    #
+    # # peg选股
+    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "peg_pick")
     # A_stocks_data.main()
-    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "quarter_increase")
+    # H_stocks_data = AShareData("H", "INDUSTRY_HS", "peg_pick")
     # H_stocks_data.main()
-
-    # # 股东增持
-    # # 公司行动事件汇总——全部A股、本周——公司资料变更
-    # # 将股东增持文件命名为ih_A.xlsx
-    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "increase_holding")
+    #
+    # # A股小市值低估值统计
+    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "small_cap_undervalue")
     # A_stocks_data.main()
-    # H_stocks_data = HShareData("H", "INDUSTRY_HS", "increase_holding")
-    # H_stocks_data.main()
-
-    # 质押比例
-    # A_stocks_data = AShareData("A", "INDUSTRY_SW", "share_pledged")
-    # A_stocks_data.main()
-
-    # 平台突破
-    A_stocks_data = AShareData("A", "INDUSTRY_SW", "thrust_up_plate")
-    A_stocks_data.main()
-    H_stocks_data = HShareData("H", "INDUSTRY_HS", "thrust_up_plate")
-    H_stocks_data.main()
-
-    # peg选股
-    A_stocks_data = AShareData("A", "INDUSTRY_SW", "peg_pick")
-    A_stocks_data.main()
-    H_stocks_data = AShareData("H", "INDUSTRY_HS", "peg_pick")
-    H_stocks_data.main()
-
-    # A股小市值低估值统计
-    A_stocks_data = AShareData("A", "INDUSTRY_SW", "small_cap_undervalue")
-    A_stocks_data.main()
 
     # 中信行业MA60统计
     A_stocks_data = AShareData("A", "INDUSTRY_CITIC", "MA60")
