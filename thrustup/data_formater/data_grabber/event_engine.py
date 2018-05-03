@@ -22,7 +22,7 @@ def event_engine_main():
     zlzjl_event_main()
 
     hsgtzjl_event_main()
-    rzrq_event_main()
+    # rzrq_event_main()
 
 
 if __name__ == "__main__":
