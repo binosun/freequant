@@ -9,6 +9,6 @@ from purify_file import purify_file
 
 if __name__ == "__main__":
     thrust_up_main()
-    concat_excel_main()
+    # concat_excel_main()
     rate_change_main()
     purify_file()

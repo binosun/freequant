@@ -661,9 +661,10 @@ def write_small_cap_undervalue():
 
 def concat_excel_main():
     # concat_ih_xls()
-    concat_history_high_xls()
-    write_peg_pick_xls()
+    # concat_history_high_xls()
+    # write_peg_pick_xls()
     # write_small_cap_undervalue()
+    pass
 
 if __name__ == "__main__":
     concat_excel_main()
