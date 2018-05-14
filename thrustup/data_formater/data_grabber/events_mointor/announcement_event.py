@@ -151,11 +151,10 @@ def announcement_main():
     # df.set_index(df[u"公告时间"], drop=True, inplace=True)
     # del df[u"公告时间"]
     # df.to_excel("1.xls")
-    write_format_xls(df,u"自选股公告采集("+ today_str+")")
+    write_format_xls(df,u"自选股公告采集("+ today_str+u")")
     Toolkit.saveTimestamp("config/timestamp", "last_timestamp=" + now_str)
     print timestamp["last_timestamp"] + "============>" + now_str
 
 
 if __name__ == "__main__":
     announcement_main()
-
