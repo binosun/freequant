@@ -127,7 +127,6 @@ def announcement_main():
     symbol_ids = get_self_selection_stocks()
     print symbol_ids
     symbols_announcements = []
-    # try:
     for key, symbol_id in enumerate(symbol_ids):
         snowball_code = get_snowball_code(symbol_id)
         if not snowball_code:
@@ -138,14 +137,9 @@ def announcement_main():
         print symbol_id, single_announcements
         symbols_announcements.extend(single_announcements)
 
-        # if "SH" in symbol_id or "SZ" in symbol_id:
-        #     get_research(code) # 研报
-        # break
         time.sleep(4)
         if key %10 == 0:
             time.sleep(5)
-    # except Exception as e:
-    #     print e
 
     df = pd.DataFrame(data=symbols_announcements, columns=[u"名称",u"公告时间",u"公告标题",u"网页链接"])
     # df.set_index(df[u"公告时间"], drop=True, inplace=True)
