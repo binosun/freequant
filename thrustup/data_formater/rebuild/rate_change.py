@@ -7,6 +7,10 @@ import datetime as dt
 import pandas as pd
 from WindPy import *
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 w.start()
 today_str = dt.datetime.today().strftime("%Y-%m-%d")
 data_tag = "data_output//" + today_str + "//"
@@ -65,13 +69,13 @@ def get_north_rate_df(tag,this_week,last_week):
     last_data_dt = pd.DataFrame(last_data, index=last_fields, columns=last_codes).T
 
     industry = last_data_dt["INDUSTRY_SW"]
-    result_df.insert(1, "申万三级行业名称", industry)
+    result_df.insert(1, "申万一级行业", industry)
     return result_df
 
 def get_south_rate_df(this_week, last_week):
     south_tag = u"沪深港通持股.xlsx"
-    this_week_file = this_week + south_tag
-    last_week_file = last_week + south_tag
+    this_week_file = data_tag+this_week + south_tag
+    last_week_file = data_tag+last_week + south_tag
 
     if not os.path.exists(this_week_file):
         print(u"未找到数据文件"+ this_week_file)
@@ -99,10 +103,28 @@ def get_south_rate_df(this_week, last_week):
     rate_dict = {}
     for stock in intersect_codes:
         name_dict[stock] = last_df[u"证券简称"][stock]
-        last_dict[stock] = last_df[u"占流通A股(%)(计算)"][stock]
-        this_dict[stock] = this_df[u"占流通A股(%)(计算)"][stock]
+        last_dict[stock] = last_df[u"占港股总股数(%)(计算)"][stock]
+        this_dict[stock] = this_df[u"占港股总股数(%)(计算)"][stock]
         rate_dict[stock] = (this_dict[stock]-last_dict[stock])
-    pass
+
+    result_df[u"证券简称"] = pd.Series(name_dict)
+    result_df[u"上周占港股总股数(%)"] = pd.Series(last_dict)
+    result_df[u"本周占港股总股数(%)"] = pd.Series(this_dict)
+    result_df[u"持仓周增(%)"] = pd.Series(rate_dict)
+    result_df = result_df[result_df[u"本周占港股总股数(%)"] > 1]
+    result_df.sort_values(by=u"持仓周增(%)", ascending=False, inplace=True)
+
+
+    industry_result = w.wss(result_df.index.tolist(), "industry_HS","category=1")
+    last_codes = industry_result.Codes
+    last_fields = industry_result.Fields
+    last_data = industry_result.Data
+    last_data_dt = pd.DataFrame(last_data, index=last_fields, columns=last_codes).T
+
+    industry = last_data_dt["INDUSTRY_HS"]
+    result_df.insert(1, u"恒生一级行业", industry)
+    return result_df
+
 
 def set_style(name, height, bold=False, pattern_switch=False, alignment_center=True):
     style = xlwt.XFStyle()  # 初始化样式
@@ -148,6 +170,9 @@ def create_book():
     return book,sheet1
 
 def write_ih_book(data,sheet1):
+    # if not data:
+    #     print("数据为空")
+    #     return
     if data.empty:
         print("数据为空")
         return
@@ -168,9 +193,11 @@ def write_ih_book(data,sheet1):
             cell_data = data[row0[i]][j - 1]
             cell_data = round(cell_data, 2) if isinstance(cell_data, float) else cell_data
             if (i==2 or i==3) and (cell_data>10):
-                sheet1.write(j, i + 1, cell_data, set_style('Arial', 200, True, True, True))
+                # sheet1.write(j, i + 1, cell_data, set_style('Arial', 200, True, True, True))
+                sheet1.write(j, i + 1, cell_data)
             else:
-                sheet1.write(j, i + 1, cell_data, set_style('Arial', 200))
+                sheet1.write(j, i + 1, cell_data)
+
         sheet1.col(0).width = 160 * 25
         sheet1.col(1).width = 160 * 25
         sheet1.col(2).width = 250 * 25
@@ -199,6 +226,7 @@ def north_direction(this_week, last_week):
 def south_direction(this_week, last_week):
 
     rate_df = get_south_rate_df(this_week, last_week)
+    # rate_df.to_excel(data_tag + "south_direction_rate_change" + today_str + ".xls", float_format = '%.2f')
     book,sheet1 = create_book()
     write_ih_book(rate_df, sheet1)
     book.save(data_tag + "south_direction_rate_change" + today_str + ".xls")
@@ -206,7 +234,8 @@ def south_direction(this_week, last_week):
 def rate_change_main():
     this_week = raw_input(u"请输入本周日期：")
     last_week = raw_input(u"请输入上周日期：")
-    north_direction(this_week, last_week)
+    # north_direction(this_week, last_week)
+    south_direction(this_week, last_week)
 
 
 if __name__ == "__main__":
