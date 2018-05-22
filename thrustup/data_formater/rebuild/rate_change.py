@@ -234,7 +234,7 @@ def south_direction(this_week, last_week):
 def rate_change_main():
     this_week = raw_input(u"请输入本周日期：")
     last_week = raw_input(u"请输入上周日期：")
-    # north_direction(this_week, last_week)
+    north_direction(this_week, last_week)
     south_direction(this_week, last_week)
 
 
