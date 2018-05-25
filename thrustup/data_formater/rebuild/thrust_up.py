@@ -127,7 +127,7 @@ class DataFormatter(object):
         today = dt.datetime.today()
         import time
         now_time = time.strptime(today.strftime("%H:%M"), "%H:%M")
-        if now_time < time.strptime("16:20", "%H:%M"):
+        if now_time < time.strptime("16:00", "%H:%M"):
             today = today - dt.timedelta(days=1)
 
         today_str = today.strftime("%Y-%m-%d")
