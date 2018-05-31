@@ -4,6 +4,7 @@
 
 import json
 import time
+from datetime import datetime
 from collections import OrderedDict
 
 import pandas as pd
@@ -28,7 +29,6 @@ def init_url():
         start_date_str = dates["last_friday"]
     end_date_str = raw_input("股东增减持公告日的截止日期,例2017-11-30:")
 
-    from datetime import datetime
     start_date = datetime.strptime(start_date_str,"%Y-%M-%d")
     end_date = datetime.strptime(end_date_str, "%Y%M%d")
 
