@@ -24,12 +24,14 @@ def init_url():
     headers = {}
 
     dates = calculate_date()
-    start_date_str = raw_input("股东增减持公告日的起始日期(回车默认上周五),例2017-11-24:")
+    start_date_str = raw_input("股东增减持公告日的起始日期(回车默认上周五),例20171124:")
     if not start_date_str:
         start_date_str = dates["last_friday"]
-    end_date_str = raw_input("股东增减持公告日的截止日期,例2017-11-30:")
+        start_date = datetime.strptime(start_date_str, "%Y-%M-%d")
+    else:
+        start_date = datetime.strptime(start_date_str, "%Y%M%d")
 
-    start_date = datetime.strptime(start_date_str,"%Y-%M-%d")
+    end_date_str = raw_input("股东增减持公告日的截止日期,例20171130:")
     end_date = datetime.strptime(end_date_str, "%Y%M%d")
 
     start_date = start_date.strftime("%Y-%M-%d")
