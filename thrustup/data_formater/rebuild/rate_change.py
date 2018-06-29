@@ -232,8 +232,8 @@ def south_direction(this_week, last_week):
     book.save(data_tag + "south_direction_rate_change" + today_str + ".xls")
 
 def rate_change_main():
-    this_week = raw_input(u"请输入本周日期：")
     last_week = raw_input(u"请输入上周日期：")
+    this_week = raw_input(u"请输入本周日期：")
     north_direction(this_week, last_week)
     south_direction(this_week, last_week)
 

@@ -14,7 +14,7 @@ from freequant.thrustup.data_formater.data_grabber.formatter.zjc_xlwt_formatter 
 
 def request_url(url, header):
     url_response = urllib_requester(url,header)
-    result = url_response[27:-1]
+    result = url_response[28:-1]
     print "result",result,type(result)
     return result
 

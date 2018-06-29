@@ -21,6 +21,7 @@ def event_engine_main():
     gdzjc_event_main()
     zlzjl_event_main()
     hsgtzjl_event_main()
+    # ggzjc_event_main()
 
 
 if __name__ == "__main__":
